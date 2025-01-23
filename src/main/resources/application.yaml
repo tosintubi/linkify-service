@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: linkify-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/linkifyservice
+    username: postgres
+    password: password
+
+server:
+  port: 8080
