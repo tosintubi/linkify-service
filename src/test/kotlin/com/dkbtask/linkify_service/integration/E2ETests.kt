@@ -41,7 +41,7 @@ class E2ETests {
         """.trimIndent()
 
         mockMvc.perform(
-            post("/api/v1/url-service/shorten")
+            post("/api/v1/url/shorten")
                 .contentType("application/json")
                 .content(requestBody)
         )
@@ -59,7 +59,7 @@ class E2ETests {
         """.trimIndent()
         // Send request to shorten a URL.
         val shortenResponse = mockMvc.perform(
-            post("/api/v1/url-service/shorten")
+            post("/api/v1/url/shorten")
                 .contentType("application/json")
                 .content(requestBody)
         )
@@ -69,7 +69,7 @@ class E2ETests {
         val shortUrlIdentifier = JsonPath.read<String>(shortenResponse.response.contentAsString, "$.shortUrlIdentifier")
 
         // Then resolve it
-        mockMvc.perform(get("/api/v1/url-service/resolve/$shortUrlIdentifier"))
+        mockMvc.perform(get("/api/v1/url/resolve/$shortUrlIdentifier"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.longUrl", equalTo(sampleUrl)))
     }
@@ -78,7 +78,7 @@ class E2ETests {
     fun `should return 404 for when long Url is not found for shortCodeIdentifier`() {
         val randomShortUrlIdentifier = NanoIdUtils.randomNanoId(12)
 
-        mockMvc.perform(get("/api/v1/url-service/resolve/$randomShortUrlIdentifier"))
+        mockMvc.perform(get("/api/v1/url/resolve/$randomShortUrlIdentifier"))
             .andExpect(status().isNotFound)
             .andExpect(jsonPath("$.errorCode").isNotEmpty)
     }
@@ -92,7 +92,7 @@ class E2ETests {
             }
         """.trimIndent()
         // Send request to shorten a URL.
-        mockMvc.perform(post("/api/v1/url-service/shorten")
+        mockMvc.perform(post("/api/v1/url/shorten")
                 .contentType("application/json")
                 .content(requestBody)
         )
