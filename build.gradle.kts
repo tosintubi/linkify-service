@@ -16,6 +16,9 @@ java {
 
 repositories {
 	mavenCentral()
+	maven {
+		url = uri("https://jitpack.io")
+	}
 }
 
 dependencies {
@@ -38,6 +41,8 @@ dependencies {
 
 	// Utils
 	implementation("org.apache.commons:commons-lang3:3.17.0")
+	implementation("com.soundicly:jnanoid-enhanced:1650e4357c")
+
 }
 
 kotlin {

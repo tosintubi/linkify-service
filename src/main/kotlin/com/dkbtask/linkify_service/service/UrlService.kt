@@ -9,9 +9,9 @@ import com.dkbtask.linkify_service.model.Url
 import com.dkbtask.linkify_service.model.toLongUrlResponse
 import com.dkbtask.linkify_service.model.toShortUrlResponse
 import com.dkbtask.linkify_service.repository.UrlRepository
+import com.soundicly.jnanoidenhanced.jnanoid.NanoIdUtils
 import java.net.URL
 import java.time.Instant
-import java.util.UUID
 import mu.KotlinLogging
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.MDC
@@ -32,7 +32,10 @@ class UrlService (
 
         logger.info { "Saving URL: ${urlRequest.url}" }
         val savedUrl = urlRepository.save(
-            Url(hashLongUrl(urlRequest.url),urlRequest.url, Instant.now())
+            Url(
+                longUrl = generateShortUrlCode(),
+                shortUrl = urlRequest.url,
+                createdAt = Instant.now())
         )
             .also{
                 MDC.put("shortUrl", it.shortUrl )
@@ -58,9 +61,10 @@ class UrlService (
         return url.toLongUrlResponse()
     }
 
-    private  fun hashLongUrl(longUrl: String): String {
-        // TODO: return random UUID for now
-        return UUID.randomUUID().toString()
+
+    private fun generateShortUrlCode(): String {
+        val dictionary = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        return NanoIdUtils.randomNanoId(dictionary, 12)
     }
 
     private fun isValidUrl(url: String): Boolean {
