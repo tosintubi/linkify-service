@@ -23,6 +23,7 @@ class UrlService (
 ){
     companion object {
         private val logger = KotlinLogging.logger {}
+        private const val SHORT_CODE_SIZE = 12
     }
 
     fun saveUrl(urlRequest: UrlRequest): ShortUrlResponse {
@@ -61,14 +62,15 @@ class UrlService (
         return url.toLongUrlResponse()
     }
 
-    private fun generateShortUrlCode(): String {
+    fun generateShortUrlCode(): String {
         val dictionary = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        return NanoIdUtils.randomNanoId(dictionary, 12)
+        return NanoIdUtils.randomNanoId(dictionary, SHORT_CODE_SIZE)
     }
 
     private fun isValidUrl(url: String): Boolean {
         return try {
-            URL(url)
+            val parsedUrl = URL(url)
+            parsedUrl.protocol in listOf("http", "https", "ftp", "file")
             true
         } catch (e: Exception) {
             false

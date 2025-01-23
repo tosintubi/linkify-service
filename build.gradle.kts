@@ -31,10 +31,11 @@ dependencies {
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
-	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+//	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:postgresql")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("io.mockk:mockk:1.13.13")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
 
 	// Logging
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
