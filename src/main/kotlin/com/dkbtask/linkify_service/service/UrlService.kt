@@ -65,8 +65,8 @@ class UrlService (
 
     private fun isValidUrl(url: String): Boolean {
         return try {
-            val parsedUrl = URL(url)
-            parsedUrl.protocol in listOf("http", "https", "ftp")
+            URL(url)
+            true
         } catch (e: Exception) {
             false
         }
