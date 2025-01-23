@@ -35,6 +35,9 @@ dependencies {
 
 	// Logging
 	implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+
+	// Utils
+	implementation("org.apache.commons:commons-lang3:3.17.0")
 }
 
 kotlin {
