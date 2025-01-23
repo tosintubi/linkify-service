@@ -1,32 +1,42 @@
 package com.dkbtask.linkify_service.exception
 
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatusCode
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.servlet.mvc.annotation.ResponseStatusExceptionResolver
 
 @ControllerAdvice
-class ExceptionHandler: ResponseStatusExceptionResolver() {
-
-    @ExceptionHandler(ShortUrlNotFoundException::class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    fun handleShortUrlNotFoundException(exception: ShortUrlNotFoundException): ErrorResponse {
-        logger.warn { " ⚠️ ShortUrl not found: $exception" } // Should log be WARN or ERROR
-        return ErrorResponse("SHORT_URL_NOT_FOUND", HttpStatus.NOT_FOUND)
+class ExceptionHandler {
+    companion object {
+        private val logger = KotlinLogging.logger {}
     }
 
+    @ExceptionHandler(ShortUrlNotFoundException::class)
+    fun handleShortUrlNotFoundException(exception: ShortUrlNotFoundException): ResponseEntity<ErrorResponse> {
+        logger.warn { " ⚠️ ShortUrl not found: $exception" }
+        return ResponseEntity(
+            ErrorResponse(
+                errorDescription = "The requested short URL could not be found.",
+                errorCode = "SHORT_URL_NOT_FOUND",
+            ),
+            HttpStatus.NOT_FOUND)
+    }
 
-    @ExceptionHandler(BadRequestException::class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun handleBadRequestException(exception: BadRequestException): ErrorResponse {
-        logger.warn { " ⚠️ Missing : $exception" }
-        return ErrorResponse("MISSING_SHORTLINK_IN_REQUEST", HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidLinkException::class)
+    fun handleBadRequestException(exception: InvalidLinkException): ResponseEntity<ErrorResponse> {
+        logger.warn { " ‼️ Invalid link in request : $exception" }
+        return ResponseEntity(
+            ErrorResponse(
+                errorDescription = "The provided link is missing or invalid.",
+                errorCode = "INVALID_LINK_PROVIDED",
+            ),
+            HttpStatus.BAD_REQUEST
+        )
     }
 }
 
 data class ErrorResponse(
-    val errorDetail: String?,
-    val errorCode: HttpStatusCode
+    val errorDescription: String,
+    val errorCode: String
 )

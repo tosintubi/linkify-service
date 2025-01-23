@@ -2,12 +2,10 @@ package com.dkbtask.linkify_service.service
 
 import com.dkbtask.linkify_service.dto.LongUrlResponse
 import com.dkbtask.linkify_service.dto.UrlRequest
-import com.dkbtask.linkify_service.dto.ShortUrlResponse
-import com.dkbtask.linkify_service.exception.BadRequestException
+import com.dkbtask.linkify_service.exception.InvalidLinkException
 import com.dkbtask.linkify_service.exception.ShortUrlNotFoundException
 import com.dkbtask.linkify_service.model.Url
 import com.dkbtask.linkify_service.model.toLongUrlResponse
-import com.dkbtask.linkify_service.model.toShortUrlResponse
 import com.dkbtask.linkify_service.repository.UrlRepository
 import com.soundicly.jnanoidenhanced.jnanoid.NanoIdUtils
 import java.net.URL
@@ -26,16 +24,16 @@ class UrlService (
         private const val SHORT_CODE_SIZE = 12
     }
 
-    fun saveUrl(urlRequest: UrlRequest): ShortUrlResponse {
+    fun saveUrl(urlRequest: UrlRequest): String {
         if (!isValidUrl(urlRequest.url)){
-            throw BadRequestException("Invalid URL")
+            throw InvalidLinkException("Invalid URL")
         }
 
         logger.info { "Saving URL: ${urlRequest.url}" }
-        val savedUrl = urlRepository.save(
+        val savedUrlCode = urlRepository.save(
             Url(
-                longUrl = generateShortUrlCode(),
-                shortUrl = urlRequest.url,
+                shortUrl = generateShortUrlCode(),
+                longUrl = urlRequest.url,
                 createdAt = Instant.now())
         )
             .also{
@@ -44,14 +42,14 @@ class UrlService (
                 }
             }
 
-        return savedUrl.toShortUrlResponse()
+        return savedUrlCode.shortUrl
     }
 
     fun fetchLongUrl(shortUrl: String): LongUrlResponse {
         logger.info {"processing resolving short URL. $shortUrl" }
 
         if (StringUtils.isBlank(shortUrl)) {
-            throw BadRequestException("Short Url code is blank or null")
+            throw InvalidLinkException("Short Url code is blank or null")
         }
 
         val url = urlRepository.findById(shortUrl)

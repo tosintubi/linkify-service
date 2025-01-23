@@ -2,7 +2,7 @@ package com.dkbtask.linkify_service.unit
 
 
 import com.dkbtask.linkify_service.dto.UrlRequest
-import com.dkbtask.linkify_service.exception.BadRequestException
+import com.dkbtask.linkify_service.exception.InvalidLinkException
 import com.dkbtask.linkify_service.exception.ShortUrlNotFoundException
 import com.dkbtask.linkify_service.model.Url
 import com.dkbtask.linkify_service.repository.UrlRepository
@@ -65,7 +65,7 @@ class UrlServiceTest {
     @Test
     fun `should throw BadRequestException for invalid URL`() {
         val urlRequest = UrlRequest("invalid_url")
-        assertThrows<BadRequestException> {
+        assertThrows<InvalidLinkException> {
             urlService.saveUrl(urlRequest)
         }
     }
@@ -95,7 +95,7 @@ class UrlServiceTest {
     @ParameterizedTest
     @ValueSource(strings = ["", "http:/invalid-url.com/",""])
     fun `should throw BadRequestException for empty short URL`() {
-        assertThrows<BadRequestException> {
+        assertThrows<InvalidLinkException> {
             urlService.fetchLongUrl("")
         }
     }
