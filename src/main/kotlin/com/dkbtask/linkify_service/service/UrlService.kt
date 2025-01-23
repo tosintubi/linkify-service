@@ -61,7 +61,6 @@ class UrlService (
         return url.toLongUrlResponse()
     }
 
-
     private fun generateShortUrlCode(): String {
         val dictionary = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         return NanoIdUtils.randomNanoId(dictionary, 12)
