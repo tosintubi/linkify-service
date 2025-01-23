@@ -43,6 +43,10 @@ dependencies {
 	implementation("org.apache.commons:commons-lang3:3.17.0")
 	implementation("com.soundicly:jnanoid-enhanced:1650e4357c")
 
+	// Swagger
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
+
+
 }
 
 kotlin {

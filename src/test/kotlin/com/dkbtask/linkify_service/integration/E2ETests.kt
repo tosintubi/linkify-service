@@ -85,7 +85,7 @@ class E2ETests {
 
     @ParameterizedTest
     @ValueSource(strings = ["", "invalid-url.com/", "//random/url/"])
-    fun `should return 403 for invalid URL`(url: String) {
+    fun `should return 400 for invalid URL`(url: String) {
         val requestBody = """
             {
                 "url": "$url"
