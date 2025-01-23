@@ -37,6 +37,4 @@ class UrlController(
         val urlResponse = urlService.fetchLongUrl(shortUrl)
         return ResponseEntity.ok(urlResponse.toLongUrlResponse())
     }
-
-
 }

@@ -2,6 +2,7 @@ package com.dkbtask.linkify_service.integration
 
 import com.jayway.jsonpath.JsonPath
 import com.soundicly.jnanoidenhanced.jnanoid.NanoIdUtils
+import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
@@ -50,9 +51,10 @@ class E2ETests {
 
     @Test
     fun `should return full URL for a valid short URL`() {
+        val sampleUrl = "https://another-awesome-linkify-service-url.io"
         val requestBody = """
             {
-                "url": "https://another-awesome-linkify-service-url.io"
+                "url": "$sampleUrl"
             }
         """.trimIndent()
         // Send request to shorten a URL.
@@ -69,7 +71,7 @@ class E2ETests {
         // Then resolve it
         mockMvc.perform(get("/api/v1/url-service/resolve/$shortUrlIdentifier"))
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.longUrl").isNotEmpty)
+            .andExpect(jsonPath("$.longUrl", equalTo(sampleUrl)))
     }
 
     @Test
@@ -95,6 +97,6 @@ class E2ETests {
                 .content(requestBody)
         )
         .andExpect(status().isBadRequest)
-        .andExpect(jsonPath("$.errorCode").isNotEmpty)
+        .andExpect(jsonPath("$.errorCode", equalTo("INVALID_LINK_PROVIDED")))
     }
 }
