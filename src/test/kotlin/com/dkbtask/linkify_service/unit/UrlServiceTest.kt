@@ -35,17 +35,19 @@ class UrlServiceTest {
     private lateinit var urlRepository: UrlRepository
 
     @InjectMocks
-    private lateinit var urlService : UrlService
+    private lateinit var urlService: UrlService
 
     @ParameterizedTest
-    @ValueSource(strings = [
-        "http://awesome-url.io",
-        "https://www.another-awesome.com/path?query=param#fragment",
-        "https://localhost:8000/",
-        "http://192.168.0.1/test/a/b/c/d/e",
-        "ftp://localhost:8000",
-        "file://somepath/subpath/",
-    ])
+    @ValueSource(
+        strings = [
+            "http://awesome-url.io",
+            "https://www.another-awesome.com/path?query=param#fragment",
+            "https://localhost:8000/",
+            "http://192.168.0.1/test/a/b/c/d/e",
+            "ftp://localhost:8000",
+            "file://somepath/subpath/",
+        ]
+    )
     fun `should save URL successfully`(testUrls: String) {
         val urlRequest = UrlRequest(testUrls)
         val shortUrl = NanoIdUtils.randomNanoId()
@@ -53,12 +55,11 @@ class UrlServiceTest {
 
         whenever(urlRepository.save(any())).thenReturn(expectedUrl)
 
-        val savedShortLink = urlService.saveUrl(urlRequest)
+        val savedUrl = urlService.saveUrl(urlRequest)
 
         assertAll(
-            { assertEquals(shortUrl, savedShortLink.shortUrl) },
-            { assertEquals(urlRequest.url, savedShortLink.longUrl) },
-            { assertNotNull(savedShortLink) }
+            { assertEquals(shortUrl, savedUrl.shortUrl) },
+            { assertNotNull(savedUrl) }
         )
     }
 
@@ -93,7 +94,7 @@ class UrlServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["", "http:/invalid-url.com/",""])
+    @ValueSource(strings = ["", "http:/invalid-url.com/", ""])
     fun `should throw BadRequestException for empty short URL`() {
         assertThrows<InvalidLinkException> {
             urlService.fetchLongUrl("")

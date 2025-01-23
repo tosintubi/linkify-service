@@ -20,7 +20,8 @@ class ExceptionHandler {
                 errorDescription = "The requested short URL could not be found.",
                 errorCode = "SHORT_URL_NOT_FOUND",
             ),
-            HttpStatus.NOT_FOUND)
+            HttpStatus.NOT_FOUND
+        )
     }
 
     @ExceptionHandler(InvalidLinkException::class)
@@ -38,5 +39,5 @@ class ExceptionHandler {
 
 data class ErrorResponse(
     val errorDescription: String,
-    val errorCode: String
+    val errorCode: String,
 )
