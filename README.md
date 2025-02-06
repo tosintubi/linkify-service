@@ -72,6 +72,7 @@ Resolves a shortened identifier back to the original long URL.
 - **Kotlin**: Modern JVM language known for conciseness and null-safety.
 - **Spring Boot**: Framework for building production-ready Spring-based applications.
 - **PostgreSQL**: Relational database for storing original and shortened URLs.
+- **Redis**:  A key-value storage for in-memory cache.
 - **NanoId**: Secure random string generator for creating unique identifiers.
 - **Docker Compose**: Tool for defining and running multi-container Docker applications.
 
@@ -80,7 +81,6 @@ Resolves a shortened identifier back to the original long URL.
 ## Future Enhancements
 
 - **Redirection Support**: Add HTTP redirection functionality to `GET /resolve/{shortenLinkIdentifier}`.
-- **Distributed Cache**: Integrate a distributed cache like **Redis** to improve performance and reduce database load.
 - **Custom URL Aliases**: Allow users to specify custom shortened identifiers.
 - **Extended Protocol Support**: Support additional URL protocols beyond `http`, `https`, and `ftp`.
 - **Analytics**: Track usage statistics for each shortened link for reporting and analytics.

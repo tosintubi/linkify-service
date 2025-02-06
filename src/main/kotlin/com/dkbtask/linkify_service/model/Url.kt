@@ -2,10 +2,15 @@ package com.dkbtask.linkify_service.model
 
 import com.dkbtask.linkify_service.dto.LongUrlResponse
 import com.dkbtask.linkify_service.dto.ShortUrlResponse
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
 import java.time.Instant
 
+@JsonTypeInfo(
+    use = JsonTypeInfo.Id.CLASS,
+    include = JsonTypeInfo.As.PROPERTY,
+    property = "@class")
 @Entity
 data class Url(
     @Id

@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  postgres:
+  linkifypostgres:
     image: postgres:15-alpine
     container_name: linkifyservice_postgres
     environment:
@@ -13,6 +13,11 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  linkifyredis:
+    image: redis:7-alpine
+    container_name: linkify_redis
+    ports:
+      - "6399:6399"
 
   app:
     image: linkifyservice:latest
@@ -23,12 +28,15 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - linkifypostgres
+      - linkifyredis
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linkifyservice
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: password
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
 
 volumes:
   postgres_data:

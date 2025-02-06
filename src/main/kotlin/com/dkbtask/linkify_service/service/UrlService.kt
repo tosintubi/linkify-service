@@ -1,13 +1,9 @@
 package com.dkbtask.linkify_service.service
 
-import com.dkbtask.linkify_service.dto.LongUrlResponse
-import com.dkbtask.linkify_service.dto.ShortUrlResponse
 import com.dkbtask.linkify_service.dto.UrlRequest
 import com.dkbtask.linkify_service.exception.InvalidLinkException
 import com.dkbtask.linkify_service.exception.ShortUrlNotFoundException
 import com.dkbtask.linkify_service.model.Url
-import com.dkbtask.linkify_service.model.toLongUrlResponse
-import com.dkbtask.linkify_service.model.toShortUrlResponse
 import com.dkbtask.linkify_service.repository.UrlRepository
 import com.soundicly.jnanoidenhanced.jnanoid.NanoIdUtils
 import java.net.URL
@@ -15,6 +11,8 @@ import java.time.Instant
 import mu.KotlinLogging
 import org.apache.commons.lang3.StringUtils
 import org.slf4j.MDC
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,15 +24,19 @@ class UrlService(
         private const val SHORT_CODE_SIZE = 12
     }
 
+    @CachePut(value = ["shortUrls"], key = "#result.shortUrl")
     fun saveUrl(urlRequest: UrlRequest): Url {
         if (!isValidUrl(urlRequest.url)) {
             throw InvalidLinkException("Invalid URL")
         }
 
+        val hashedUrl = generateShortUrlIdentifier()
+        // does hashedurlExist
+        // if exists, regenerate, otherwise continue
         logger.info { "Saving URL: ${urlRequest.url}" }
         val savedUrlCode = urlRepository.save(
             Url(
-                shortUrl = generateShortUrlIdentifier(),
+                shortUrl = hashedUrl,
                 longUrl = urlRequest.url,
                 createdAt = Instant.now()
             )
@@ -45,6 +47,7 @@ class UrlService(
         return savedUrlCode
     }
 
+    @Cacheable(value = ["shortUrls"], key = "#shortUrl")
     fun fetchLongUrl(shortUrl: String): Url {
         logger.info { "processing resolving short URL. $shortUrl" }
 

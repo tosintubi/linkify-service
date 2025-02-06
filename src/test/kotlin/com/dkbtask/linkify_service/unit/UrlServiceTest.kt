@@ -25,6 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.kotlin.whenever
 import org.mockito.quality.Strictness
+import org.springframework.data.redis.core.RedisTemplate
 
 
 @ExtendWith(MockitoExtension::class)
